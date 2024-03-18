@@ -120,27 +120,7 @@ void stateMachine_SW1(void){
 	}
 
     // control Red LED
-	switch(Status_RedLED){
-	case LED_OFF:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, RESET);
-		break;
-
-	case ON_WAIT:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
-		break;
-
-	case LED_ON:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, SET);
-		break;
-
-	case OFF_WAIT:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, RESET);
-		break;
-
-	default:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, RESET);
-		break;
-	}
+    controlLED(GPIOA, GPIO_PIN_3, Status_RedLED);
 
 }
 
@@ -194,39 +174,42 @@ void stateMachine_SW2(void){
         break;
     }
 
-
     // control Green LED
-	switch(Status_GreenLED){
+    controlLED(GPIOA, GPIO_PIN_4, Status_GreenLED);
+
+}
+
+void controlLED(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, state_t status_LED){
+	switch(status_LED){
 	case LED_OFF:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, RESET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, RESET);
 		break;
 
 	case OFF_WAIT:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, RESET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, RESET);
 		break;
 
 	case LED_ON:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, SET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, SET);
 		break;
 
 	case ON_RELEASE:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, SET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, SET);
 		break;
 
 	case ON_WAIT:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, SET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, SET);
 		break;
 
 	case OFF_RELEASE:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, RESET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, RESET);
 		break;
 
 	default:
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, RESET);
+		HAL_GPIO_WritePin(GPIOx, GPIO_Pin, RESET);
 		break;
 	}
 }
-
 /* USER CODE END 0 */
 
 /**
