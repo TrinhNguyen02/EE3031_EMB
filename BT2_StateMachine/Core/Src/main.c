@@ -59,34 +59,22 @@ typedef enum{BTN_RELEASE, BTN_PRESS} btn_t;
 
 static state_t Status_GreenLED, Status_RedLED;
 static btn_t Btn_1, Btn_2;
-static btn_t StatusBtn(uint8_t sw);
+static btn_t StatusBtn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 int timerCount = 0;
 
-
-btn_t StatusBtn(uint8_t sw){
-	switch(sw){
-	case 1:
-		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1)) {
+btn_t StatusBtn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
+		if(HAL_GPIO_ReadPin(GPIOx, GPIO_Pin)) {
 			HAL_Delay(10);
-			if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1)) return BTN_RELEASE;
+			if(HAL_GPIO_ReadPin(GPIOx, GPIO_Pin)) return BTN_RELEASE;
 		}
 		else return BTN_PRESS;
-		break;
-
-	case 2:
-		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2)) {
-			HAL_Delay(10);
-			if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2)) return BTN_RELEASE;
-		}
-		else return BTN_PRESS;
-		break;
-	}
 }
 
-void checkBtn(){
-	Btn_1 = StatusBtn(1);
-	Btn_2 = StatusBtn(2);
+
+void checkBtn(void){
+	Btn_1 = StatusBtn(GPIOA, GPIO_PIN_1);
+	Btn_2 = StatusBtn(GPIOA, GPIO_PIN_2);
 }
 
 void initState(){
