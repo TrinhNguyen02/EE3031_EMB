@@ -287,7 +287,7 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+void StartDefaultTask(void const * argument)		// control led
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
@@ -296,13 +296,13 @@ void StartDefaultTask(void const * argument)
   {
      if (xQueueReceive(myQueue01Handle, &led_state, portMAX_DELAY) == pdPASS) {
     	 if(led_state == 1) {
-    		 HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, SET);
+    		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
     	 }
     	 else if (led_state == 0) {
-    		 HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, RESET);
+    		 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
     	 }
     	 else if (led_state == 2) {
-    		 HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+    		 HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
     	 }
      }
       osDelay(1);
@@ -317,7 +317,7 @@ void StartDefaultTask(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_StartTask02 */
-void StartTask02(void const * argument)
+void StartTask02(void const * argument)		// status of switch
 {
   /* USER CODE BEGIN StartTask02 */
   /* Infinite loop */
@@ -326,7 +326,6 @@ void StartTask02(void const * argument)
   for(;;)
   {
 	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) == RESET){
-		  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		  switchStatus = 2;
 		  xQueueSend(myQueue01Handle, &switchStatus, portMAX_DELAY);
 		  osDelay(100);
@@ -346,7 +345,7 @@ void StartTask02(void const * argument)
 
 
 /* USER CODE END Header_StartTask03 */
-void StartTask03(void const * argument)
+void StartTask03(void const * argument)		// serial comunication
 {
   /* USER CODE BEGIN StartTask03 */
   /* Infinite loop */
@@ -358,21 +357,18 @@ void StartTask03(void const * argument)
 	        if (HAL_UART_Receive(&huart1, (uint8_t*)&rxBuffer[index], 1, portMAX_DELAY) == HAL_OK) {
 
 	        		if (strncmp(rxBuffer, "ON\\CR\\LF",10) == 0) {
-	                	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	                    uint8_t on_command = 1;
 	                    xQueueSend(myQueue01Handle, &on_command, portMAX_DELAY);
 		                index = 0;
 		                clearMsg(rxBuffer,LENGTH_BF_MAX);
 	                }
 	                else if (strncmp(rxBuffer, "OFF\\CR\\LF",11) == 0) {
-	                	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	                    uint8_t on_command = 0;
 	                    xQueueSend(myQueue01Handle, &on_command, portMAX_DELAY);
 		                index = 0;
 		                clearMsg(rxBuffer,LENGTH_BF_MAX);
 	                }
 	                else if (strncmp(rxBuffer, "TOGGLE\\CR\\LF",14) == 0) {
-	                	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	                    uint8_t on_command = 2;
 	                    xQueueSend(myQueue01Handle, &on_command, portMAX_DELAY);
 		                index = 0;
